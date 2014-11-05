@@ -1,0 +1,46 @@
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+public class PlayerLog : MonoBehaviour
+{
+	// Private VARS
+	private List<string> Eventlog = new List<string>();
+	private string textGui = "";
+	
+	// Public VARS
+	public int maxLines = 50;
+	public static PlayerLog instance;
+	private Vector2 scrollPosition;
+
+	void Awake(){
+		instance = this;
+	}
+	
+	void OnGUI()
+	{
+		GUILayout.BeginArea (new Rect(Screen.width - 150, Screen.height - 150, 140 ,140 ));
+		scrollPosition = GUILayout.BeginScrollView (scrollPosition, GUILayout.Width (140), GUILayout.Height(140));
+		GUILayout.Label(textGui);
+		GUILayout.EndScrollView ();
+		GUILayout.EndArea ();
+	}
+	
+	public void AddEvent(string eventString)
+	{
+		Eventlog.Add(eventString);
+
+
+		scrollPosition.y = Mathf.Infinity;
+		if (Eventlog.Count >= maxLines)
+			Eventlog.RemoveAt(0);
+		
+		textGui = "";
+		
+		foreach (string logEvent in Eventlog)
+		{
+			textGui += logEvent;
+			textGui += "\n" + "\n";
+		}
+	}
+}
